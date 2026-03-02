@@ -1569,8 +1569,11 @@
     // 헤더 영역 — 보기 모드
     function renderHeroView() {
       const r = ROLES.find(x => x.id === cur);
-      document.getElementById('d-person').innerHTML =
-        r.person ? `<span class="d-chip">👤 ${r.person}</span>` : '';
+      const personHtml = r.person ? `<span class="d-chip">👤 ${r.person}</span>` : '';
+      const tagsHtml = (r.tags || []).map(t =>
+        `<span class="card-tag-pill tp-${r.type}">#${t}</span>`
+      ).join('');
+      document.getElementById('d-person').innerHTML = personHtml + tagsHtml;
     }
 
     // 헤더 영역 — 편집 모드 (담당자 + 태그)
