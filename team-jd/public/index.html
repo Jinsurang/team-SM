@@ -1328,6 +1328,21 @@
       } catch { useCloud = false; localStorage.setItem('jd_v5', JSON.stringify(data)); return false; }
     }
 
+    async function forceSyncKV() {
+      if (!confirm('현재 코드의 직무 데이터를 클라우드플레어 저장소에 강제로 덮어씌울까요?')) return;
+      try {
+        const ok = await apiSave(db);
+        if (ok) {
+          alert('동기화 성공! 페이지를 새로고침하여 확인하세요.');
+          location.reload();
+        } else {
+          alert('동기화 실패 (네트워크 오류)');
+        }
+      } catch (e) {
+        alert('오류 발생: ' + e.message);
+      }
+    }
+
     function setStatus(msg, cls = 'ok', icon = '') {
       const el = document.getElementById('stag');
       document.getElementById('s-icon').textContent = icon;
