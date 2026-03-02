@@ -9,4 +9,4 @@ compatibility_date = "2024-01-01"
 # ──────────────────────────────────────────────────────
 [[kv_namespaces]]
 binding = "JD_STORE"
-id = "YOUR_KV_NAMESPACE_ID_HERE"
+id = "dde3a842e2a147e2ab7cbd72ae34615e"
