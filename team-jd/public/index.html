@@ -1346,13 +1346,39 @@
       }
       const cloud = await apiLoad();
       if (cloud) {
-        for (const r of ROLES) { if (cloud[r.id]) db[r.id] = cloud[r.id]; }
+        // 데이터 호환성 유지: cloud가 d { db, ROLES } 형태인지 아니면 이전의 db 자체인지 확인
+        const data = cloud.db ? cloud.db : cloud;
+        const savedRoles = cloud.ROLES || [];
+
+        // 1. 섹션 데이터 복구 (db)
+        for (const r of ROLES) {
+          if (data[r.id]) db[r.id] = data[r.id];
+        }
+
+        // 2. 담당자 및 태그 데이터 복구 (ROLES)
+        savedRoles.forEach(sr => {
+          const r = ROLES.find(x => x.id === sr.id);
+          if (r) {
+            if (sr.person !== undefined) r.person = sr.person;
+            if (sr.tags !== undefined) r.tags = sr.tags;
+          }
+        });
       } else {
         try {
           const local = localStorage.getItem('jd_v5');
           if (local) {
             const p = JSON.parse(local);
-            for (const r of ROLES) { if (p[r.id]) db[r.id] = p[r.id]; }
+            const data = p.db ? p.db : p;
+            for (const r of ROLES) { if (data[r.id]) db[r.id] = data[r.id]; }
+            if (p.ROLES) {
+              p.ROLES.forEach(sr => {
+                const r = ROLES.find(x => x.id === sr.id);
+                if (r) {
+                  if (sr.person !== undefined) r.person = sr.person;
+                  if (sr.tags !== undefined) r.tags = sr.tags;
+                }
+              });
+            }
           }
         } catch { }
       }
@@ -1619,7 +1645,7 @@
         if (ed) s.h = ed.innerHTML;
       });
       setStatus('저장 중...', 'info', '⏳');
-      const ok = await apiSave(db);
+      const ok = await apiSave({ db, ROLES });
       editMode = false; showBtns(false);
       renderHeroView(); renderSecs();
       renderHome(); // 카드 태그/담당자 업데이트
