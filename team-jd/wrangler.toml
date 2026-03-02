@@ -1,0 +1,12 @@
+name = "team-jd"
+pages_build_output_dir = "public"
+compatibility_date = "2024-01-01"
+
+# ──────────────────────────────────────────────────────
+# 배포 전 아래 id를 실제 KV Namespace ID로 교체하세요.
+# Cloudflare Dashboard → Workers & Pages → KV
+# 새 Namespace 생성 후 ID 복사
+# ──────────────────────────────────────────────────────
+[[kv_namespaces]]
+binding = "JD_STORE"
+id = "YOUR_KV_NAMESPACE_ID_HERE"
